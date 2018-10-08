@@ -3,10 +3,12 @@ import { product } from './requestInterface';
 import { AppService } from '../app.service';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import *as global from '../global';
+import * as global from '../global';
 declare var $;
 import { CookieService } from 'ngx-cookie-service';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import 'rxjs/add/operator/filter';
+
 @Component({
   selector: 'app-landingproduct',
   templateUrl: './landingproduct.component.html',
@@ -20,7 +22,7 @@ export class LandingproductComponent implements OnInit {
   pages: Array<number> = [];
   users: object;
   updateicon: boolean;
-  Isfavorite: boolean = false;
+  Isfavorite = false;
   cart: any;
   typeid: any;
   countryid: any;
@@ -53,14 +55,19 @@ export class LandingproductComponent implements OnInit {
   cartdata: any;
   agelimit: any;
   cookieValue: any;
-  template: string = `<img src="/assets/Images/assets/loading_icon.gif" />`
+  template = `<img src='/assets/Images/assets/loading_icon.gif' />`;
   inventory: any;
   eventlenght: any[];
   DeviceId: string;
   DeviceType: string;
 
 
-  constructor(private spinnerService: Ng4LoadingSpinnerService, private activatedRoute: ActivatedRoute, private cookieService: CookieService, private router: Router, private appService: AppService, private httpclient: HttpClient) {
+  constructor(private spinnerService: Ng4LoadingSpinnerService,
+    private activatedRoute: ActivatedRoute,
+    private cookieService: CookieService,
+    private router: Router,
+    private appService: AppService,
+    private httpclient: HttpClient) {
 
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
@@ -89,7 +96,7 @@ export class LandingproductComponent implements OnInit {
   }
   ngOnInit() {
 
-    $(".dropdown").hover(
+    $('.dropdown').hover(
       function () {
         $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true);
         $(this).toggleClass('open');
@@ -104,15 +111,15 @@ export class LandingproductComponent implements OnInit {
     this.cookieValue = this.cookieService.get('Test');
     console.log(this.cookieValue)
 
-    if (this.cookieValue == "") {
-      var id = '#dialog';
+    if (this.cookieValue === '') {
+      const id = '#dialog';
 
 
       //Get the screen height and width
 
-      var maskHeight = $(document).height();
+      const maskHeight = $(document).height();
 
-      var maskWidth = $(window).width();
+      const maskWidth = $(window).width();
 
       //Set heigth and width to mask to fill up the whole screen
 
@@ -122,13 +129,13 @@ export class LandingproductComponent implements OnInit {
 
       $('#mask').fadeIn(500);
 
-      $('#mask').fadeTo("slow", 0.9);
+      $('#mask').fadeTo('slow', 0.9);
 
       //Get the window height and width
 
-      var winH = $(window).height();
+      const winH = $(window).height();
 
-      var winW = $(window).width();
+      const winW = $(window).width();
 
       //Set the popup window to center
 
@@ -204,12 +211,10 @@ export class LandingproductComponent implements OnInit {
     this.cookieService.set('Test', 'Hello World', 1 / 4);
   }
 
-  staticBanners = [
-    {
-      "EventLargeImage": "http://liquorapps.com/Images/EventImgLarge/180577c2-08d5-4b34-9332-5e88f1ddbe82.png"
-    }
-
-  ]
+  // tslint:disable-next-line:member-ordering
+  staticBanners = [{
+    'EventLargeImage': 'http://liquorapps.com/Images/EventImgLarge/180577c2-08d5-4b34-9332-5e88f1ddbe82.png'
+  }];
 
   Productgetdetailes(id) {
     this.router.navigate(['/product', id]);
@@ -226,7 +231,7 @@ export class LandingproductComponent implements OnInit {
       PID: pid,
       CartId: 0,
       Quantity: 1
-    }
+    };
 
     // console.log(body2); 
     this.appService.postdetails(global.baseUrl + 'Cart/CartAddItem', cartbody)
@@ -245,17 +250,17 @@ export class LandingproductComponent implements OnInit {
     if (localStorage.getItem('EmailId') == null) {
       let body: any;
       body = {
-        EmailId: "",
-        Password: "",
-        LoginType: "B",
-        AppVersion: "8.5",
-        DeviceId: "W",
-        DeviceType: "W",
+        EmailId: '',
+        Password: '',
+        LoginType: 'B',
+        AppVersion: '8.5',
+        DeviceId: 'W',
+        DeviceType: 'W',
         AppId: 10002,
         StoreId: 10002
       }
       this.appService.postdetails(global.baseUrl + 'Login/LoginCustomer', body).subscribe(Response => {
-        if (Response.IsAccess == true) {
+        if (Response.IsAccess === true) {
           console.log(Response);
           localStorage.setItem('StoreId', Response.StoreId);
           localStorage.setItem('DeviceId', Response.DeviceId);
@@ -270,14 +275,14 @@ export class LandingproductComponent implements OnInit {
             PageSize: 12,
             PageNumber: this.selected,
             IsClub: 0,
-            KeyWord: "",
+            KeyWord: '',
             CategoryId: this.categoryid,
-            // CategoryId:"1,2,3,4",
-            RegionId: "",
-            TypeId: "",
-            VaritalId: "",
-            CountryId: "",
-            SizeId: "",
+            // CategoryId:'1,2,3,4',
+            RegionId: '',
+            TypeId: '',
+            VaritalId: '',
+            CountryId: '',
+            SizeId: '',
             SessionId: localStorage.getItem('SessionId'),
             UserId: localStorage.getItem('UserId'),
             AppId: 10002,
@@ -292,10 +297,10 @@ export class LandingproductComponent implements OnInit {
           console.log(body2);
           this.spinnerService.show();
           this.appService.postdetails(global.baseUrl + 'Product/ProductGetList', body2)
-            .subscribe(Response => {
-              if (Response) {
+            .subscribe(response => {
+              if (response) {
 
-                this.productsList = Response.ListProduct;
+                this.productsList = response.ListProduct;
                 this.spinnerService.hide();
 
                 console.log(this.productsList);
@@ -306,30 +311,29 @@ export class LandingproductComponent implements OnInit {
                   UserId: localStorage.getItem('UserId'),
                   AppId: 10002,
                   IsFeatureProduct: true
-                }
+                };
 
                 console.log(StoreObject);
                 this.appService.postdetails(global.baseUrl + 'Store/StoreGetHome', StoreObject)
-                  .subscribe(Response => {
-                    if (Response) {
-                      console.log(Response);
-                      this.storegetList = Response.HomeList;
-                      this.hometitle = Response.HomeTitle;
-                      this.eventList = Response.EventList;
+                  .subscribe(res => {
+                    if (res) {
+                      console.log(res);
+                      this.storegetList = res.HomeList;
+                      this.hometitle = res.HomeTitle;
+                      this.eventList = res.EventList;
 
 
-                      this.unitesize = Response.StoreFilters[0].ListSize;
+                      this.unitesize = res.StoreFilters[0].ListSize;
 
                       // console.log(this.storegetList);
-                      if (this.eventList.length == "") {
+                      if (this.eventList.length === '') {
                         this.eventList = this.staticBanners;
                         this.carousalfirstImage = this.eventList[0].EventLargeImage;
-                        this.storefilters = Response.StoreFilters;
-                        this.listtypes = Response.StoreFilters[1].ListType;
-                        this.cartItemCount = Response.CartItemCount;
+                        this.storefilters = res.StoreFilters;
+                        this.listtypes = res.StoreFilters[1].ListType;
+                        this.cartItemCount = res.CartItemCount;
                         console.log(this.storefilters);
-                      }
-                      else {
+                      } else {
                         this.carousalfirstImage = this.eventList[0].EventLargeImage;
                         this.storefilters = Response.StoreFilters;
                         this.listtypes = Response.StoreFilters[1].ListType;
@@ -340,14 +344,13 @@ export class LandingproductComponent implements OnInit {
                         }
                       }
 
-                    }
-                    else {
-                      alert("something went wrong at server");
+                    } else {
+                      alert('something went wrong at server');
                     }
 
                   });
               } else {
-                alert("something went wrong at server");
+                alert('something went wrong at server');
               }
 
             });
@@ -361,14 +364,14 @@ export class LandingproductComponent implements OnInit {
         PageSize: 12,
         PageNumber: this.selected,
         IsClub: 0,
-        KeyWord: "",
+        KeyWord: '',
         CategoryId: this.categoryid,
-        // CategoryId:"1,2,3,4",
-        RegionId: "",
-        TypeId: "",
-        VaritalId: "",
-        CountryId: "",
-        SizeId: "",
+        // CategoryId:'1,2,3,4',
+        RegionId: '',
+        TypeId: '',
+        VaritalId: '',
+        CountryId: '',
+        SizeId: '',
         SessionId: localStorage.getItem('SessionId'),
         UserId: localStorage.getItem('UserId'),
         AppId: 10002,
@@ -378,7 +381,7 @@ export class LandingproductComponent implements OnInit {
         MinPrice: 0,
         DeviceId: localStorage.getItem('DeviceId'),
         DeviceType: localStorage.getItem('DeviceType')
-      }
+      };
 
       console.log(body3);
       this.spinnerService.show();
@@ -401,44 +404,42 @@ export class LandingproductComponent implements OnInit {
 
             console.log(StoreObject);
             this.appService.postdetails(global.baseUrl + 'Store/StoreGetHome', StoreObject)
-              .subscribe(Response => {
-                if (Response) {
-                  console.log(Response);
-                  this.storegetList = Response.HomeList;
-                  this.hometitle = Response.HomeTitle;
-                  this.eventList = Response.EventList;
+              .subscribe(res => {
+                if (res) {
+                  console.log(res);
+                  this.storegetList = res.HomeList;
+                  this.hometitle = res.HomeTitle;
+                  this.eventList = res.EventList;
 
 
-                  this.unitesize = Response.StoreFilters[0].ListSize;
+                  this.unitesize = res.StoreFilters[0].ListSize;
 
                   // console.log(this.storegetList);
-                  if (this.eventList.length == "") {
+                  if (this.eventList.length === '') {
                     this.eventList = this.staticBanners;
                     this.carousalfirstImage = this.eventList[0].EventLargeImage;
-                    this.storefilters = Response.StoreFilters;
-                    this.listtypes = Response.StoreFilters[1].ListType;
-                    this.cartItemCount = Response.CartItemCount;
+                    this.storefilters = res.StoreFilters;
+                    this.listtypes = res.StoreFilters[1].ListType;
+                    this.cartItemCount = res.CartItemCount;
                     console.log(this.storefilters);
-                  }
-                  else {
+                  } else {
                     this.carousalfirstImage = this.eventList[0].EventLargeImage;
-                    this.storefilters = Response.StoreFilters;
-                    this.listtypes = Response.StoreFilters[1].ListType;
-                    this.cartItemCount = Response.CartItemCount;
+                    this.storefilters = res.StoreFilters;
+                    this.listtypes = res.StoreFilters[1].ListType;
+                    this.cartItemCount = res.CartItemCount;
                     for (let i = 0; i <= this.eventList.length; i++) {
                       this.eventlenght.push(i);
                       console.log(this.eventlenght);
                     }
                   }
 
-                }
-                else {
-                  alert("something went wrong at server");
+                } else {
+                  alert('something went wrong at server');
                 }
 
               });
           } else {
-            alert("something went wrong at server");
+            alert('something went wrong at server');
           }
 
         });
@@ -458,9 +459,9 @@ export class LandingproductComponent implements OnInit {
       AppId: 10002,
       PID: this.id,
       ReviewRating: _reviewid,
-      ReviewTitle: "Test",
-      ReviewDescription: "Testing..."
-    }
+      ReviewTitle: 'Test',
+      ReviewDescription: 'Testing...'
+    };
 
     //   console.log(review);
     this.appService.postdetails(global.baseUrl + 'Review/ReviewRatingInsert', review)
@@ -469,10 +470,9 @@ export class LandingproductComponent implements OnInit {
           this.reviewrating = Response.RatingAverage;
 
           console.log(this.reviewrating);
-          // alert("sucess");
-        }
-        else {
-          alert("something went wrong at server");
+          // alert('sucess');
+        } else {
+          alert('something went wrong at server');
         }
 
       });
@@ -488,18 +488,17 @@ export class LandingproductComponent implements OnInit {
       AppId: 10002,
       PID: pid,
       FavoriteStatus: favoritestatus
-    }
+    };
     console.log(addfavorite);
     this.appService.postdetails(global.baseUrl + 'Product/FavoriteProductUpdate', addfavorite)
-      .subscribe(Response => {
-        if (Response) {
-          this.favorite = Response;
+      .subscribe(res => {
+        if (res) {
+          this.favorite = res;
           console.log(this.favorite);
           const index: number = i;
           this.productsList[i].IsFavorite = favoritestatus;
-        }
-        else {
-          alert("something went wrong at server");
+        } else {
+          alert('something went wrong at server');
         }
 
       });
@@ -511,15 +510,15 @@ export class LandingproductComponent implements OnInit {
   categorymenu(id) {
     console.log(id);
     // this.router.navigate(['/home',id]);
-    this.router.navigate(['home/'], { queryParams: { id: id, value: "" } });
-    if (id == 3) {
+    this.router.navigate(['home/'], { queryParams: { id: id, value: '' } });
+    if (id === 3) {
       this.categorytype = true;
     }
 
   }
 
   categoryproduct(cid) {
-    this.router.navigate(['home/'], { queryParams: { id: cid, value: "" } });
+    this.router.navigate(['home/'], { queryParams: { id: cid, value: '' } });
   }
 
 }

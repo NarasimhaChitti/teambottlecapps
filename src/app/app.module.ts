@@ -124,8 +124,7 @@ const routes: Routes = [
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig
-    },
-    { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true }],
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpInterceptor, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-
-import 'rxjs/add/operator/do';
+import { Injectable } from '@angular/core';
 import { HttpCacheService } from './cache.service';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CacheInterceptor implements HttpInterceptor {
@@ -17,7 +15,7 @@ export class CacheInterceptor implements HttpInterceptor {
 
         if (cachedResponse) {
             console.log('response from cache');
-            return Observable.of(cachedResponse);
+            return cachedResponse;
         }
 
         if (req.url.indexOf('/StoreGetHome') > 0) {

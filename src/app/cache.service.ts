@@ -1,6 +1,6 @@
 import { HttpRequest, HttpResponse, HttpInterceptor, HttpHandler, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 abstract class  HttpCache {
     abstract get(req: HttpRequest<any>): HttpResponse<any>|null;
